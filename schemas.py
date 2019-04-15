@@ -23,3 +23,8 @@ class UserSchema(Schema):
         if user is not None:
             raise ValidationError(
                 'This email is already registered. Please provide a different email')
+
+
+class UserLoginSchema(Schema):
+    email = fields.Str(required=True)
+    password = fields.Str(required=True)
