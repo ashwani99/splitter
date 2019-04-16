@@ -37,3 +37,6 @@ That's it. The server address will be shown in the terminal console. By default 
 # Built With
 - [Flask](http://flask.pocoo.org/) - The web framework used
 - [SQLite](https://www.sqlite.org) - Database used
+
+# License
+MIT
