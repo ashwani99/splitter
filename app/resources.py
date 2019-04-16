@@ -6,8 +6,8 @@ from sqlalchemy.exc import IntegrityError
 
 from http import client as httpclient
 from app import db
-from models import User as UserModel
-from schemas import UserSchema
+from app.models import User as UserModel
+from app.schemas import UserSchema
 
 
 def error_template(message, status_code):

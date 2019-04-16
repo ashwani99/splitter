@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, validates, ValidationError
 
-from models import User
+from app.models import User
 
 
 class UserSchema(Schema):

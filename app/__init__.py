@@ -10,8 +10,8 @@ db = SQLAlchemy()
 api = Api()
 jwt = JWTManager()
 
-
-from resources import User
+# add resources to endpoints
+from app.resources import User
 api.add_resource(User, '/api/users', '/api/users/<int:id>')
 
 
@@ -24,10 +24,7 @@ def create_app(config=Config):
     jwt.init_app(app)
 
     # register auth blueprint
-    from auth import bp as auth_bp
+    from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
-    
+
     return app
-
-
-import auth
