@@ -20,14 +20,12 @@ class User(Resource):
 
     @jwt_required
     def get(self, id=None):
-        # print(current_identity)
         if id:
             user = UserModel.query.get(id)
             if user is None:
                 return error_template('User not found', httpclient.NOT_FOUND)
             return self.user_schema.dump(user).data, httpclient.OK
         users = UserModel.query.all()
-        print(type(self.user_schema.dump(users, many=True).data))
         return self.user_schema.dump(users, many=True).data, httpclient.OK
 
     def post(self):
@@ -44,7 +42,6 @@ class User(Resource):
         return self.user_schema.dump(user).data, httpclient.CREATED
         
     def put(self, id):
-
         user = UserModel.query.filter_by(id=id).first()
         if user is None:
             return error_template('User not found', httpclient.NOT_FOUND)
