@@ -10,15 +10,10 @@ class UserSchema(Schema):
     password = fields.Str(required=True, load_only=True)
     registered_at = fields.DateTime(dump_only=True)
 
-    @validates('username')
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username).first()
-        if user is not None:
-            raise ValidationError(
-                'This username is already registered. Please provide a different username')
-
     @validates('email')
     def validate_email(self, email):
+        if self.context['user'].email == email:
+            return
         user = User.query.filter_by(email=email).first()
         if user is not None:
             raise ValidationError(

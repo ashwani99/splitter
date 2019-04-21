@@ -24,3 +24,9 @@ class User(db.Model):
 @jwt.user_identity_loader
 def get_user_id(user):
     return user.id
+
+
+@jwt.user_loader_callback_loader
+def load_user(id):
+    return User.query.get(id)
+    
