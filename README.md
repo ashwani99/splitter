@@ -34,6 +34,12 @@ $ flask run
 ```
 That's it. The server address will be shown in the terminal console. By default Flask serves it at localhost at port 5000 i.e [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
 
+- Run tests
+Unit tests are written inside `tests.py`. So to run the tests simply run the file standalone.
+```bash
+$ python tests.py
+```
+
 # Built With
 - [Flask](http://flask.pocoo.org/) - The web framework
 - [SQLite](https://www.sqlite.org) - Database

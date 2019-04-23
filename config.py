@@ -15,3 +15,9 @@ class Config:
     SQLALCHEMY_ECHO = True # for testing SQL commands
     
     JWT_SECRET_KEY = os.environ.get('SPLITTER_SECRET', default_secret_key)
+
+
+class TestConfig(Config):
+    """Contains test environment specific configurations"""
+
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
