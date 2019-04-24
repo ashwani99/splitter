@@ -66,3 +66,21 @@ class User(Resource):
                 
     def delete(self, id):
         return NotImplementedError
+
+
+class Bill(Resource):
+    @jwt_required
+    def get(self):
+        return NotImplementedError
+
+    @jwt_required
+    def post(self):
+        return NotImplementedError
+
+    @jwt_required
+    def put(self):
+        return NotImplementedError
+
+    @jwt_required
+    def delete(self):
+        return NotImplementedError
