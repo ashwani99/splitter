@@ -2,11 +2,11 @@
 
 Splitter is bill splitting application. You can use this to split your expenses with friends. Currently the application is its initial stage.
 
-# Features
+### Features
 
 See [feature issues](https://github.com/ashwani99/splitter/labels/enhancement) for current/upcoming features. Feel free to open a new issue if you want to suggest a feature request!
 
-# Run Locally
+### Run Locally
 To get up and running, follow the steps:
 - Open up a terminal. Clone the repo
 ```bash
@@ -40,9 +40,9 @@ Unit tests are written inside `tests.py`. So to run the tests simply run the fil
 $ python tests.py
 ```
 
-# Built With
+### Built With
 - [Flask](http://flask.pocoo.org/) - The web framework
 - [SQLite](https://www.sqlite.org) - Database
 
-# License
+### License
 MIT
