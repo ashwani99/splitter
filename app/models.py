@@ -41,19 +41,33 @@ class Bill(db.Model):
     title = db.Column(db.String(64), nullable=False)
     desc = db.Column(db.String(256))
     amount = db.Column(db.Float, nullable=False)
+    payer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def add_participant(self, participant, share, is_payer=False):
-        bd = BillDetails.query.filter_by(bill=self, user=participant)
+    payer = db.relationship('User', backref='paid_bills')
+
+    def __init__(self, title, payer, desc='', amount=0):
+        self.title = title
+        self.desc = desc
+        self.amount = amount
+        self.payer = payer
+        # adding the payer with 0 share initially, update it later
+        # along with the other participants
+        self.add_participant(payer)
+
+    def add_participant(self, participant, share=0):
+        for bd in self.bill_details:
+            if bd.user is participant:
+                break
+        else:
+            bd = None
+
         # update if found
         if bd is not None:
             bd.share = share
-            bd.is_payer = is_payer
         else:
-            self.bill_details.append(
-                BillDetails(bill=self, user=participant, share=share, is_payer=is_payer)
-            )
+            bd = BillDetails(bill=self, user=participant, share=share)
 
     def remove_participant(self, participant):
         bd = BillDetails.query.filter_by(bill=self, user=participant).scalar()
@@ -71,7 +85,6 @@ class BillDetails(db.Model):
         primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False,
         primary_key=True)
-    is_payer = db.Column(db.Boolean, default=False)
     share = db.Column(db.Float, nullable=False, default=0.0)
 
     user = db.relationship('User', backref=backref('bill_details', 
@@ -80,4 +93,4 @@ class BillDetails(db.Model):
         cascade='all, delete-orphan'))
 
     def __repr__(self):
-        return '<BillDetail(bill={}, user={})>'.format(self.bill_id, self.user_id)
+        return '<BillDetail(bill={}, user={}, share={})>'.format(self.bill_id, self.user_id, self.share)
