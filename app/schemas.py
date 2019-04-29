@@ -12,7 +12,7 @@ class UserSchema(Schema):
 
     @validates('email')
     def validate_email(self, email):
-        if self.context['user'].email == email:
+        if 'user' in self.context and self.context['user'].email == email:
             return
         user = User.query.filter_by(email=email).first()
         if user is not None:
