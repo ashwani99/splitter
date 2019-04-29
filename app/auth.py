@@ -17,7 +17,7 @@ def login():
     json_data = request.get_json()
     data, errors = login_schema.load(json_data)
     if errors:
-        return errors, httpclient.UNPROCESSABLE_ENTITY
+        return jsonify(errors), httpclient.UNPROCESSABLE_ENTITY
     user = User.query.filter_by(email=data['email']).scalar()
     if user and user.verify_password(data['password']):
         access_token = create_access_token(identity=user)
