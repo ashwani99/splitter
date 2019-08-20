@@ -1,11 +1,10 @@
 from flask import request, jsonify
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from marshmallow import post_load
 from sqlalchemy.exc import IntegrityError
 
 from http import client as httpclient
-from app import db
+from app import db, api
 from app.models import User as UserModel
 from app.schemas import UserSchema
 
@@ -80,3 +79,6 @@ class Bill(Resource):
     @jwt_required
     def delete(self):
         return NotImplementedError
+
+
+api.add_resource(User, '/api/users', '/api/users/<int:id>')

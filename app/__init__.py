@@ -12,10 +12,6 @@ migrate = Migrate()
 api = Api()
 jwt = JWTManager()
 
-# add resources to endpoints
-from app.resources import User
-api.add_resource(User, '/api/users', '/api/users/<int:id>')
-
 
 def create_app(config=Config):
     """An application factory"""
@@ -33,4 +29,4 @@ def create_app(config=Config):
     return app
 
 
-from app import models
+from app import models, resources
