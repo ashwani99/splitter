@@ -36,56 +36,37 @@ class Bill(SurrogatePK, TimeStampMixin, db.Model):
     __tablename__ = 'bills'
 
     title = db.Column(db.String(64), nullable=False)
-    desc = db.Column(db.String(256))
+    description = db.Column(db.String(256))
     amount = db.Column(db.Float, nullable=False)
-    payer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    author = db.relationship('User', foreign_keys=[author_id])
+    payer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    payer = db.relationship('User', foreign_keys=[payer_id])
+    paid = db.Column(db.Boolean, default=False) # sqlite doesn't allow server_default=False
 
-    payer = db.relationship('User', backref='paid_bills')
-
-    def __init__(self, title, payer, desc='', amount=0):
-        self.title = title
-        self.desc = desc
-        self.amount = amount
-        self.payer = payer
-        # adding the payer with 0 share initially, update it later
-        # along with the other participants
-        self.add_participant(payer)
-
-    def add_participant(self, participant, share=0):
-        for bd in self.bill_details:
-            if bd.user is participant:
-                break
-        else:
-            bd = None
-
-        # update if found
-        if bd is not None:
-            bd.share = share
-        else:
-            bd = BillDetails(bill=self, user=participant, share=share)
-
-    def remove_participant(self, participant):
-        bd = BillDetails.query.filter_by(bill=self, user=participant).scalar()
-        if bd is not None:
-            self.bill_details.remove(bd)
+    def __init__(self, title, description, author, payer, amount=0):
+        db.Model.__init__(
+            self, 
+            title=title, 
+            description=description,
+            author=author,
+            payer=payer,
+            amount=amount)
 
     def __repr__(self):
         return '<Bill({}, id={})>'.format(self.title, self.id)
 
 
-class BillDetails(db.Model):
-    __tablename__ = 'bill_details'
+class BillSplit(db.Model):
+    __tablename__ = 'bill_splits'
     
     bill_id = db.Column(db.Integer, db.ForeignKey('bills.id'), nullable=False,
         primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False,
         primary_key=True)
-    share = db.Column(db.Float, nullable=False, default=0.0)
 
-    user = db.relationship('User', backref=backref('bill_details', 
-        cascade='all, delete-orphan'))
-    bill = db.relationship('Bill', backref=backref('bill_details',
-        cascade='all, delete-orphan'))
+    user = db.relationship('User', backref=backref('splits'))
+    bill = db.relationship('Bill', backref=backref('splits'))
 
     def __repr__(self):
-        return '<BillDetail(bill={}, user={}, share={})>'.format(self.bill_id, self.user_id, self.share)
+        return '<BillSplit(bill={}, user={})>'.format(self.bill_id, self.user_id)
