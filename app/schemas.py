@@ -10,15 +10,6 @@ class UserSchema(Schema):
     password = fields.Str(required=True, load_only=True)
     registered_at = fields.DateTime(dump_only=True)
 
-    @validates('email')
-    def validate_email(self, email):
-        if 'user' in self.context and self.context['user'].email == email:
-            return
-        user = User.query.filter_by(email=email).first()
-        if user is not None:
-            raise ValidationError(
-                'This email is already registered. Please provide a different email')
-
 
 class UserLoginSchema(Schema):
     email = fields.Str(required=True)

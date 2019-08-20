@@ -47,11 +47,7 @@ class User(Resource):
         if user is None:
             return error_template('User not found', httpclient.NOT_FOUND)
         json_data = request.get_json()
-        # passing user in context to validate the schema
-        self.user_schema.context.setdefault('user', user)
         data, errors = self.user_schema.load(json_data)
-        # remove context after schema is loaded
-        self.user_schema.context.pop('user')
         if errors:
             return errors, httpclient.UNPROCESSABLE_ENTITY
         for attr, value in data.items():
