@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 from config import Config
 
@@ -21,6 +22,7 @@ def create_app(config=Config):
     migrate.init_app(app, db)
     api.init_app(app)
     jwt.init_app(app)
+    CORS(app)
 
     # register auth blueprint
     from app.auth import bp as auth_bp
