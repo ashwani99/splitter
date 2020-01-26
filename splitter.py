@@ -1,8 +1,9 @@
 from app import create_app, db, jwt
 
+
 app = create_app()
-with app.app_context(): 
-    db.create_all() # TODO: refactor this
+# with app.app_context(): 
+#     db.create_all() # TODO: refactor this
 
 from app.models import User, Bill, BillSplit
 

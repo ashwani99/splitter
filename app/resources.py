@@ -7,10 +7,7 @@ from http import client as httpclient
 from app import db, api
 from app.models import User as UserModel
 from app.schemas import UserSchema
-
-
-def error_template(message, status_code):
-    return {'message': {'error': message}}, status_code
+from app.exceptions import NotFound
 
 
 class User(Resource):
@@ -22,7 +19,7 @@ class User(Resource):
         if id:
             user = UserModel.query.get(id)
             if user is None:
-                return error_template('User not found', httpclient.NOT_FOUND)
+                raise NotFound()
             return self.user_schema.dump(user).data, httpclient.OK
         users = UserModel.query.all()
         return self.user_schema.dump(users, many=True).data, httpclient.OK
@@ -44,7 +41,7 @@ class User(Resource):
     def put(self, id):
         user = UserModel.query.filter_by(id=id).first()
         if user is None:
-            return error_template('User not found', httpclient.NOT_FOUND)
+            raise NotFound()
         json_data = request.get_json()
         data, errors = self.user_schema.load(json_data)
         if errors:
