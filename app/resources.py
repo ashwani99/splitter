@@ -20,9 +20,10 @@ class User(Resource):
             user = UserModel.query.get(id)
             if user is None:
                 raise NotFound()
-            return self.user_schema.dump(user).data, httpclient.OK
+            return self.user_schema.dump(user), httpclient.OK
         users = UserModel.query.all()
-        return self.user_schema.dump(users, many=True).data, httpclient.OK
+
+        return self.user_schema.dump(users, many=True), httpclient.OK
 
     def post(self):
         json_data = request.get_json()
@@ -30,8 +31,8 @@ class User(Resource):
 
         db.session.add(new_user)
         db.session.commit()
-        
-        return self.user_schema.dump(new_user).data, httpclient.CREATED
+
+        return self.user_schema.dump(new_user), httpclient.CREATED
         
     @jwt_required
     def put(self, id):
@@ -49,7 +50,7 @@ class User(Resource):
 
         db.session.commit()
 
-        return self.user_schema.dump(user).data
+        return self.user_schema.dump(user)
                 
     def delete(self, id):
         return NotImplementedError
