@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 import flask_restful
+from werkzeug.exceptions import BadRequest
 
 from config import Config
 from app.exceptions import ApiException, ParseError
@@ -45,8 +46,14 @@ def create_app(config=Config):
     def check_json_body():
         # make API request inputs compulsory having `application/json` mimetype
         methods_require_json = ('POST', 'PUT', 'PATCH')
-        if request.method in methods_require_json and not request.is_json:
-            raise ParseError(message='Body should be a JSON object')
+        if request.method in methods_require_json:
+            if not request.is_json:
+                raise ParseError(message='Body should be a JSON object')
+            else:
+                try:
+                    request.get_json()
+                except BadRequest as e:
+                    raise ParseError(message=e.description)
 
     # bind error handler for `Flask` routes
     # needed for `auth` blueprint
