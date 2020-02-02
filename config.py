@@ -14,13 +14,14 @@ class Config:
                                                 'sqlite:////{}'.format(os.path.join(BASEDIR, 'app.db')))
                                                 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = True # for testing SQL commands
     
     JWT_SECRET_KEY = os.environ.get('SPLITTER_SECRET', default_secret_key)
 
 
 class DevelopmentConfig(Config):
     """ Contains development environment specific configurations """
+    
+    SQLALCHEMY_ECHO = True # for testing SQL commands
     
     JWT_ACCESS_TOKEN_EXPIRES = False
 
