@@ -5,7 +5,7 @@ default_secret_key = os.urandom(24).hex()
 
 
 class Config:
-    """Contains application wide configuration"""
+    """ Contains application wide configuration """
     
     SECRET_KEY = os.environ.get('SPLITTER_SECRET', default_secret_key)
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
@@ -19,8 +19,14 @@ class Config:
     JWT_SECRET_KEY = os.environ.get('SPLITTER_SECRET', default_secret_key)
 
 
+class DevelopmentConfig(Config):
+    """ Contains development environment specific configurations """
+    
+    JWT_ACCESS_TOKEN_EXPIRES = False
+
+
 class TestConfig(Config):
-    """Contains test environment specific configurations"""
+    """ Contains test environment specific configurations """
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     
