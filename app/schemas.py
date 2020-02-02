@@ -38,3 +38,8 @@ class UserSchema(BaseSchema):
 class UserLoginSchema(BaseSchema):
     email = fields.Str(required=True)
     password = fields.Str(required=True)
+
+
+user_schema = UserSchema()
+user_schema_many = UserSchema(many=True)
+login_schema = UserLoginSchema()

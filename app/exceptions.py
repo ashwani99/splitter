@@ -20,9 +20,14 @@ class ApiException(Exception):
         return response
 
 
-class NotFound(ApiException):
+class ResourceNotFound(ApiException):
     error_status_code = 404
     message = 'Resource not found'
+
+
+class ResourceAlreadyExists(ApiException):
+    error_status_code = 409
+    message = 'Resource already exists'
 
 
 class AuthenticationFailed(ApiException):
