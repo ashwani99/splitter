@@ -26,32 +26,27 @@ class User(Resource):
 
     def post(self):
         json_data = request.get_json()
-        data, errors = self.user_schema.load(json_data)
-        if errors:
-            return errors, httpclient.UNPROCESSABLE_ENTITY
+        new_user = self.user_schema.load(json_data)
 
-        user = UserModel(email=data['email'], username=data['username'])
-        user.set_password(data['password'])
-        db.session.add(user)
+        db.session.add(new_user)
         db.session.commit()
         
-        return self.user_schema.dump(user).data, httpclient.CREATED
+        return self.user_schema.dump(new_user).data, httpclient.CREATED
         
     @jwt_required
     def put(self, id):
         user = UserModel.query.filter_by(id=id).first()
         if user is None:
             raise NotFound()
+
         json_data = request.get_json()
-        data, errors = self.user_schema.load(json_data)
-        if errors:
-            return errors, httpclient.UNPROCESSABLE_ENTITY
-        for attr, value in data.items():
-            if attr is 'password':
-                user.set_password(value)
-                continue
-            if getattr(user, attr) != value:
-                setattr(user, attr, value)
+        updated_user = self.user_schema.load(json_data)
+
+        # manual updates to user object
+        user.email = updated_user.email
+        user.username = updated_user.username
+        user.password_hash = updated_user.password_hash
+
         db.session.commit()
 
         return self.user_schema.dump(user).data

@@ -22,6 +22,10 @@ class User(SurrogatePK, TimeStampMixin, db.Model):
     username = db.Column(db.String(128), nullable=False)
     password_hash = db.Column(db.String(128))
 
+    def __init__(self, email, username, password, **kwargs):
+        db.Model.__init__(self, email=email, username=username)
+        self.set_password(password)
+
     def __repr__(self):
         return '<User({}, id={})>'.format(self.username, self.id)
 

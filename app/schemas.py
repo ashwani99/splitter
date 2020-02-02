@@ -1,4 +1,6 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_load
+
+from app.models import User
 from app.exceptions import ParseError, ValidationFailed
 
 SCHEMA = '_schema'
@@ -27,6 +29,10 @@ class UserSchema(BaseSchema):
     username = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
     registered_at = fields.DateTime(dump_only=True)
+
+    @post_load
+    def make_user(self, data, **kwargs):
+        return User(**data)
 
 
 class UserLoginSchema(BaseSchema):
